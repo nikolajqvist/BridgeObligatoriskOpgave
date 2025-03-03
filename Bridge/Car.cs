@@ -18,15 +18,14 @@ namespace Bridge
         /// <summary>
         /// This is the date and time the car is driving across the bridge.
         /// </summary>
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
 
         /// <summary>
         /// This is the car constructor
         /// </summary>
-        public Car(string licensplate, DateTime date)
+        public Car(string licensplate)
         {
             Licensplate = licensplate;
-            Date = date;
         }
         public double Price()
         {
