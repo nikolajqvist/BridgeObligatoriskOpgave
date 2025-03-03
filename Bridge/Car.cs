@@ -9,8 +9,19 @@ namespace Bridge
 {
     public class Car : Vehicle
     {
-        public Car(string licensPlate) : base(licensPlate)
+        public Car(string licensPlate, bool useBrobizz) : base(licensPlate, useBrobizz)
         {
+        }
+        public override double Price()
+        {
+            if (UseBrobizz)
+            {
+                return Math.Abs(base.Price() * 0.90);
+            }
+            else
+            {
+                return base.Price();
+            }
         }
 
         public override string VehicleType()

@@ -8,12 +8,20 @@ namespace Bridge
 {
     public class MC: Vehicle
     {
-        public MC(string licensPlate): base(licensPlate)
+        public MC(string licensPlate, bool useBrobizz) : base(licensPlate, useBrobizz)
         {
         }
+
         public override double Price()
         {
-            return base.Price() - 110;
+            if (UseBrobizz)
+            {
+                return Math.Abs(base.Price() - 110 * 0.9);
+            }
+            else
+            {
+                return base.Price() - 110;
+            }
         }
         public override string VehicleType()
         {
