@@ -47,9 +47,9 @@ namespace BridgeTest
         {
             MC m = new MC("TJ47283");
 
-            string expectedprice = "MC";
+            string expectedprice = "Motorcycle";
 
-            var actualprice = m.Vehicle();
+            var actualprice = m.VehicleType();
 
             Assert.IsTrue(expectedprice == actualprice);
         }
@@ -59,7 +59,7 @@ namespace BridgeTest
         {
             Car c1 = new Car(licensplate);
 
-            string expected = c1.Licensplate;
+            string expected = c1.LicensPlate;
 
             string result = "XJ43432";
 
