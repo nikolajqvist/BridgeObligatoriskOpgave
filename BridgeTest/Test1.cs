@@ -2,7 +2,9 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Bridge;
+using StoreBaeltTicketLibrary;
 using Microsoft.Testing.Platform.MSBuild;
+using Oresundbron;
 
 namespace BridgeTest
 {
@@ -130,9 +132,11 @@ namespace BridgeTest
         {
             Car c1 = new Car("LS85948", true);
 
+            StoreBaeltTicket sto = new StoreBaeltTicket(c1);
+
             double expected = 207.0;
 
-            double result = c1.Price();
+            double result = sto.StoreBaeltCar(c1);
 
             Assert.AreEqual(expected, result);
         }
@@ -141,11 +145,199 @@ namespace BridgeTest
         {
             MC c1 = new MC("LS85948", true);
 
-            double expected = 102;
+            StoreBaeltTicket sto = new StoreBaeltTicket(c1);
 
-            double result = c1.Price();
+            double expected = 108;
+
+            double result = sto.StoreBaeltMC(c1);
             //Forskel på de to expected og result må maks være fem. Delta er maks "Difference" between
-            Assert.AreEqual(expected, result, 5);
+            Assert.AreEqual(expected, result, 2);
+        }
+        [TestMethod]
+        public void TestMethodPriceWithWeekendNoBrobizz()
+        {
+            Car c1 = new Car("FG85475", false);
+
+            c1.Date = new DateTime(2025, 3, 1);
+
+            StoreBaeltTicket sto = new StoreBaeltTicket(c1);
+
+            double result = sto.StoreBaeltCar(c1);
+
+            double expectedprice = 195.5;
+
+            Assert.AreEqual(result, expectedprice);
+        }
+        [TestMethod]
+        public void TestMethodPriceWithWeekendWithBrobizz()
+        {
+            Car c1 = new Car("FG85475", true);
+
+            c1.Date = new DateTime(2025, 3, 1);
+
+            StoreBaeltTicket sto = new StoreBaeltTicket(c1);
+
+            double result = sto.StoreBaeltCar(c1);
+
+            double expectedprice = 175.95;
+
+            //Forskellen må maks være 0.1kr.
+            Assert.AreEqual(expectedprice, result, 0.1d);
+        }
+        [TestMethod]
+        public void TestMethodPriceWithoutWeekendAndBroBizz()
+        {
+            Car c1 = new Car("FG85475", false);
+
+            StoreBaeltTicket sto = new StoreBaeltTicket(c1);
+
+            double result = sto.StoreBaeltCar(c1);
+
+            double expectedprice = 230.0;
+
+            Assert.AreEqual(result, expectedprice);
+        }
+        [TestMethod]
+        public void TestMethodDayofWeekOutcome()
+        {
+            Car c1 = new Car("FJ28384", false);
+
+            DayOfWeek resultday = c1.Date.DayOfWeek;
+
+            DayOfWeek expectedday = DayOfWeek.Wednesday;
+
+            Assert.AreEqual(expectedday, resultday);
+        }
+        [TestMethod]
+        public void TestOresundVehiclesCarPriceNoBroBizz()
+        {
+            OresundCar car = new OresundCar("TY39484", false);
+
+            double expectedprice = 460.0;
+
+            double result = car.Price();
+
+            Assert.AreEqual(expectedprice, result);
+        }
+        [TestMethod]
+        public void TestOresundVehiclesMCPriceNoBroBizz()
+        {
+            OresundMC mc = new OresundMC("TY39434", false);
+
+            double expectedprice = 235;
+
+            double result = mc.Price();
+
+            Assert.AreEqual(expectedprice, result);
+        }
+        [TestMethod]
+        public void TestOresundVehiclesCarPriceWithBroBizz()
+        {
+            OresundCar car = new OresundCar("TY39484", true);
+
+            double expectedprice = 178.0;
+
+            double result = car.Price();
+
+            Assert.AreEqual(expectedprice, result);
+        }
+        [TestMethod]
+        public void TestOresundVehiclesMCPriceWithBroBizz()
+        {
+            OresundMC mc = new OresundMC("TY39434", true);
+
+            double expectedprice = 92.0;
+
+            double result = mc.Price();
+
+            Assert.AreEqual(expectedprice, result);
+        }
+        [TestMethod]
+        public void WhatTypeOfOresundVehicleCar()
+        {
+            OresundCar car = new OresundCar("TK28383", false);
+
+            string expectedstring = "Oresund car";
+
+            string result = car.VehicleType();
+
+            Assert.AreEqual(expectedstring, result);
+        }
+        [TestMethod]
+        public void WhatTypeOfOresundVehicleMC()
+        {
+            OresundMC mc = new OresundMC("TJ29838", false);
+
+            string expectedstring = "Oresund MC";
+
+            string result = mc.VehicleType();
+
+            Assert.AreEqual(expectedstring, result);
+        }
+        [TestMethod]
+        public void AddingTicketTolist()
+        {
+            StorebaeltRepository repo = new StorebaeltRepository();
+
+            Car c1 = new Car("TU28483", false);
+            Car c2 = new Car("TT28483", false);
+            Car c3 = new Car("RU28483", false);
+            MC mc1 = new MC("FK29484", false);
+            MC mc2 = new MC("UK29484", false);
+            MC mc3 = new MC("LK29484", false);
+
+            StoreBaeltTicket ticket1 = new StoreBaeltTicket(c1);
+            StoreBaeltTicket ticket2 = new StoreBaeltTicket(c2);
+            StoreBaeltTicket ticket3 = new StoreBaeltTicket(c3);
+            StoreBaeltTicket ticket4 = new StoreBaeltTicket(mc1);
+
+            repo.AddTicket(ticket1);
+            repo.AddTicket(ticket2);
+            repo.AddTicket(ticket3);
+            repo.AddTicket(ticket4);
+
+            int expectednumberofticket = 4;
+
+            int result = repo.TicketInList();
+
+            Assert.AreEqual(expectednumberofticket, result);
+        }
+        [TestMethod]
+        public void TestOMethodAllTicketForLicensPlate()
+        {
+            MC mc3 = new MC("LK29484", false);
+            StorebaeltRepository repo = new StorebaeltRepository();
+            StoreBaeltTicket ticket1 = new StoreBaeltTicket(mc3);
+            StoreBaeltTicket ticket2 = new StoreBaeltTicket(mc3);
+            StoreBaeltTicket ticket3 = new StoreBaeltTicket(mc3);
+            StoreBaeltTicket ticket4 = new StoreBaeltTicket(mc3);
+
+            var result = repo.AllTicketForLicensPlate(mc3.LicensPlate);
+
+            var expected = repo.AllTicketForLicensPlate(mc3.LicensPlate);
+
+            CollectionAssert.AreEqual(expected, result);
+        }
+        [TestMethod]
+        public void TestAllTicketMethod()
+        {
+            MC mc3 = new MC("LK29484", false);
+            StorebaeltRepository repo = new StorebaeltRepository();
+            StoreBaeltTicket ticket1 = new StoreBaeltTicket(mc3);
+            StoreBaeltTicket ticket2 = new StoreBaeltTicket(mc3);
+            StoreBaeltTicket ticket3 = new StoreBaeltTicket(mc3);
+            StoreBaeltTicket ticket4 = new StoreBaeltTicket(mc3);
+
+            repo.AddTicket(ticket4);
+            repo.AddTicket(ticket3);
+            repo.AddTicket(ticket2);
+            repo.AddTicket(ticket1);
+
+            int result = repo.AllTickets().Count();
+
+            int expectednumberinlist = 4;
+
+            Assert.AreEqual(expectednumberinlist, result);
         }
     }
 }

@@ -14,9 +14,10 @@ namespace Bridge
 
         public override double Price()
         {
+            double brobizzdiscount = 0.90;
             if (UseBrobizz)
             {
-                return Math.Abs(base.Price() - 110 * 0.9);
+                return ((base.Price() - 110) * brobizzdiscount);
             }
             else
             {

@@ -24,6 +24,7 @@ namespace Bridge
             }
             LicensPlate = licensPlate;
             UseBrobizz = useBrobizz;
+            Date = DateTime.Now;
         }
         public virtual double Price()
         {
