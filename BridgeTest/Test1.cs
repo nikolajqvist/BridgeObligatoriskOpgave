@@ -145,11 +145,9 @@ namespace BridgeTest
         {
             MC c1 = new MC("LS85948", true);
 
-            StoreBaeltTicket sto = new StoreBaeltTicket(c1);
-
             double expected = 108;
 
-            double result = sto.StoreBaeltMC(c1);
+            double result = c1.Price();
             //Forskel på de to expected og result må maks være fem. Delta er maks "Difference" between
             Assert.AreEqual(expected, result, 2);
         }
